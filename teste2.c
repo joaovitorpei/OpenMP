@@ -32,7 +32,7 @@
 //   // se ficar compartilhado,
 //   // várias threads disputam 'tmp'
 //   //int tmp = 0;
-//   #pragma omp parallel for default(none) shared(A, B,N) //private(tmp)
+//   #pragma omp parallel for default(none) shared(A,B,N) //private(tmp)
 //   for (int i = 0; i < N; i++) {
 //     int tmp = 0;
 //     // cada thread tem seu próprio 'tmp'
@@ -74,17 +74,20 @@
 // }
 
 //----------------------------------------------------------------------------------------
-// lastprivate(list)
+// lastprivate(list)   OMP_NUM_THREADS=4 ./t2
 // #include <omp.h>
 // #include <stdio.h>
 // int main(void) {
 //   const int N = 20;
 //   int ultimo = -1; // fora do for
+//   //omp_set_num_threads(4);
 // #pragma omp parallel for default(none) lastprivate(ultimo) shared(N)
 //   for (int i = 0; i < N; i++) {
 //     // 'ultimo' aqui é privado por thread
+//     int id = omp_get_thread_num();
 //     if (i % 3 == 0)
 //       ultimo = i;
+//       printf("i=%2d executado pela thread %d\n", i, id);
 //   } // <- ao sair, 'ultimo' recebe o
 //   // valor da ÚLTIMA iteração (i=N-1) em ordem seq.
 //   printf("ultimo multiplo de 3 em [0,%d): %d\n", N, ultimo);
@@ -117,22 +120,44 @@
 // }
 
 // static
-#include <omp.h>
-#include <stdio.h>
-int main(void) {
-  const int N = 100000;
-  static double A[100000], B[100000];
-  for (int i = 0; i < N; i++)
-    A[i] = i;
-  double t0 = omp_get_wtime();
-#pragma omp parallel for schedule(static,1024)
-  // ou schedule(static, 1024)
-  for (int i = 0; i < N; i++) {
-    B[i] = 2.0 * A[i];
-  }
-  double t1 = omp_get_wtime();
-  //printf("tempo do t0 = %.3f s\n", t0);
-  //printf("tempo do t1 = %.3f s\n", t1);
-  printf("tempo(static) = %.3f s  (B[99999]=%.1f)\n", t1 - t0, B[N - 1]);
-  return 0;
-}
+// #include <omp.h>
+// #include <stdio.h>
+// int main(void) {
+//   const int N = 100000;
+//   static double A[100000], B[100000];
+//   for (int i = 0; i < N; i++)
+//     A[i] = i;
+//   double t0 = omp_get_wtime();
+// #pragma omp parallel for schedule(static,1024)
+//   // ou schedule(static, 1024)
+//   for (int i = 0; i < N; i++) {
+//     B[i] = 2.0 * A[i];
+//   }
+//   double t1 = omp_get_wtime();
+//   //printf("tempo do t0 = %.3f s\n", t0);
+//   //printf("tempo do t1 = %.3f s\n", t1);
+//   printf("tempo(static) = %.3f s  (B[99999]=%.1f)\n", t1 - t0, B[N - 1]);
+//   return 0;
+// }
+
+//#pragma omp ordered
+// #include <stdio.h>
+// #include <omp.h>
+
+// int main(void) {
+//     const int N = 8;
+
+//     #pragma omp parallel for ordered schedule(static)
+//     for (int i = 0; i < N; i++) {
+//         int id = omp_get_thread_num();
+//         //#pragma omp ordered
+//         printf("Thread %d processando i=%d\n", id, i);
+
+//         // Apenas aqui a execução será em ordem:
+//         #pragma omp ordered
+//         printf("Saída ordenada: i=%d (Thread %d)\n", i, id);
+//     }
+
+//     return 0;
+// }
+
