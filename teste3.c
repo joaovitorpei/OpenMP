@@ -293,3 +293,42 @@
 //     return 0;
 // }
 
+//task loop
+//  #include <stdio.h>
+//  #include <stdlib.h>
+//  #include <omp.h>
+
+// static inline int heavy(int i) {
+//     // custo variável: mais lento quando i % 1000 ≈ 999
+//     int iters = 100 + (i % 1000);
+//     int acc = 0;
+
+//     for (int k = 0; k < iters; k++)
+//         acc += (k & 7);
+
+//     return acc;
+// }
+// int main(void) {
+//     const int N = 200000;
+//     int *out = (int*)malloc(N * sizeof(int));
+
+//     #pragma omp parallel
+//     {
+//         #pragma omp single
+//         {
+//             // taskloop:
+//             // divide o laço em tarefas.
+//             // grainsize(4096) → cada task tem ~4096 iterações.
+//             #pragma omp taskloop grainsize(4096) shared(out)
+//             for (int i = 0; i < N; i++) {
+//                 out[i] = heavy(i);
+//             }
+//             // Ao FINALIZAR este bloco taskloop,
+//             // todas as tasks criadas já foram executadas.
+//         }
+//     }
+
+//     printf("out[0] = %d   out[%d] = %d\n", out[0], N - 1, out[N - 1]);
+//     free(out);
+//     return 0;
+// }
