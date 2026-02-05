@@ -6,6 +6,7 @@
 - g++ -fopenmp prog.c -o prog     | ./prog  
 - gcc -3 -fopenmp prog.c prog     | ./prog  
 ### variaveis de ambiemte 
+- export OMP_NUM_THREADS=4 ai depois ./t1
 - OMP_NUM_THREADS=8 ./prog   
 - OMP_NUM_THREADS=4 OMP_SCHEDULE="static" ./prog                                                      
 - OMP_SCHEDULE="static" ./prog  

@@ -1,7 +1,30 @@
 #include <stdio.h>
 #include <omp.h>
 
+void work1(){
+        printf("primeiro \n");
+}
+
+void work2(){
+        printf("segundo\n");
+}
+
+void work3(){
+        printf("terceiro\n");
+}
 int main() {
+
+    
+
+
+
+
+
+
+
+
+
+    
     /*int a=1;
     //omp_set_num_threads(2);//numero de threads serem ultilizadas nas regios paralelas
     #pragma omp parallel reduction(+:a)
